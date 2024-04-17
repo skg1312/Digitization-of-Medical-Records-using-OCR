@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing</title>
+    <style>
+        body{
+            text-align: center;
+            background-image: url("{{ url_for('static', filename='Website.svg') }}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #processingAnimation {
+            display: none;
+            width: 50px;
+            height: 50px;
+            background-image: url("{{ url_for('static', filename='load.svg') }}");
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h1{
+            font-size: 3.5em;
+            font-weight: bold;
+            color:#000;
+        }
+        .container{
+            margin-top: 50px;
+            background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white background */
+            border-radius: 30px; /* Rounded corners */
+            padding: 50px; /* Add some padding for content */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Digitization of Medical Records using OCR with Deep Learning</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="imageFile" id="imageFile" accept="image/*" required>
+        <label for="fontSizeSlider">Font Size:</label>
+        <input type="range" id="fontSizeSlider" name="fontSize" min="0.1" max="2" step="0.1" value="0.3">
+        <span id="fontSizeDisplay">0.40</span>
+        <button type="submit">Upload Image</button>
+    </form>
+    <div id="processingAnimation"></div>
+    <div id="submitAlert" style="display: none;">Processing Image...</div>
+    <div id="resultImageContainer" style="display: none;">
+        <h2>Resulting Image</h2>
+        <img id="resultImage" src="" alt="Resulting Image">
+    </div>
+</div>
+    <script>
+        let fontSizeValue = 0.4;  // Default font size value
+
+        document.getElementById('fontSizeSlider').addEventListener('input', function(e) {
+            fontSizeValue = parseFloat(e.target.value);
+            document.getElementById('fontSizeDisplay').innerText = fontSizeValue.toFixed(2);
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let formData = new FormData();
+            formData.append('image', document.getElementById('imageFile').files[0]);
+            formData.append('fontSize', fontSizeValue);  // Include font size in form data
+
+            // Show processing animation and submit alert
+            document.getElementById('processingAnimation').style.display = 'inline-block';
+            document.getElementById('submitAlert').style.display = 'block';
+
+            fetch('/process_image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const imageUrl = URL.createObjectURL(blob);
+                document.getElementById('resultImage').src = imageUrl;
+                document.getElementById('resultImageContainer').style.display = 'block';
+
+                // Hide processing animation and submit alert
+                document.getElementById('processingAnimation').style.display = 'none';
+                document.getElementById('submitAlert').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+
+                // Hide processing animation and submit alert
+                document.getElementById('processingAnimation').style.display = 'none';
+                document.getElementById('submitAlert').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
