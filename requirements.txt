@@ -1,0 +1,5 @@
+Flask==2.0.2
+google-cloud-vision==2.5.3
+google-cloud-language==2.7.0
+opencv-python==4.5.5.62
+numpy==1.21.2
