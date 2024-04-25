@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Processing</title>
+    <title>Digitization of Medical Records using OCR</title>
     <style>
         body{
             text-align: center;
@@ -17,7 +17,7 @@
             height: 50px;
             background-image: url("{{ url_for('static', filename='load.svg') }}");
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 3s linear infinite;
         }
 
         @keyframes spin {
@@ -25,13 +25,13 @@
             100% { transform: rotate(360deg); }
         }
         h1{
-            font-size: 3.5em;
+            font-size: 3em;
             font-weight: bold;
             color:#000;
         }
         .container{
             margin-top: 50px;
-            background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white background */
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
             border-radius: 30px; /* Rounded corners */
             padding: 50px; /* Add some padding for content */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
@@ -40,7 +40,7 @@
 </head>
 <body>
     <div class="container">
-    <h1>Digitization of Medical Records using OCR with Deep Learning</h1>
+    <h1>Digitization of Medical Records using OCR</h1>
     <form id="uploadForm" enctype="multipart/form-data">
         <input type="file" name="imageFile" id="imageFile" accept="image/*" required>
         <label for="fontSizeSlider">Font Size:</label>

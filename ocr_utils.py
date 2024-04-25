@@ -16,7 +16,7 @@ def detect_handwritten_text(path):
 
     image = vision.Image(content=content)
     response = client.document_text_detection(image=image)
-
+    
     if response.error.message:
         raise Exception(
             '{}\nFor more info on error messages, check: '
@@ -70,7 +70,13 @@ def extract_handwritten_text(response, additional_terms):
 def create_overlay_image(extracted_text, original_image_path, font_size):
     """Creates a new image with extracted text areas filled with empty pixels using OpenCV."""
     original_image = cv2.imread(original_image_path)
-    new_image = original_image.copy()  # Create a copy of the original image
+    # Convert the image to grayscale
+    gray = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+    
+    # Thresholding to convert to binary (black and white)
+    binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 33)
+    
+    new_image = binary.copy()  # Create a copy of the original image
 
     for annotation in extracted_text:
         corrected_text = annotation['corrected_text']  # Get the corrected text for this annotation
